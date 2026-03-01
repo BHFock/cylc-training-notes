@@ -16,7 +16,7 @@ Every Cylc workflow is defined by a `flow.cylc` file. It is divided into section
 each enclosed in square brackets. The three sections introduced here are `[meta]`,
 `[scheduling]`, and `[runtime]`.
 
-### `[meta]`
+### [meta](flow.cylc#L1)
 
 ```cylc
 [meta]
@@ -31,7 +31,7 @@ optional but good practice — the `title` and `description` are displayed in th
 TUI and GUI, making it easier to identify workflows at a glance. Multi-line strings
 are enclosed in triple quotes.
 
-### `[scheduling]`
+### [scheduling](flow.cylc#L13)
 
 ```cylc
 [scheduling]
@@ -50,7 +50,7 @@ in the next example.
 The `=>` operator expresses a dependency: `prepare_forcing => run_model` means
 `run_model` will not start until `prepare_forcing` has succeeded.
 
-### `[runtime]`
+### [runtime](flow.cylc#L17)
 
 ```cylc
 [runtime]
