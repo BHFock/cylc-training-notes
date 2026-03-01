@@ -16,8 +16,11 @@
 
 [runtime]
     [[prepare_forcing]]
+        [[[environment]]]
+            z0 = 0.01
         script = """
             echo "Preparing forcing parameters..."
+            echo "Roughness length z0 = ${z0} m"
             sleep 10
 
             mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/forcing
@@ -25,7 +28,7 @@
             cat > ${CYLC_WORKFLOW_SHARE_DIR}/forcing/parameters.txt << EOF
 # Log wind profile forcing parameters
 u_star = 0.4
-z0     = 0.01
+z0     = ${z0}
 levels = 2.0, 5.0, 10.0, 20.0, 50.0, 100.0
 EOF
 
