@@ -75,8 +75,8 @@ Once the workflow has had a moment to complete, verify the results by inspecting
 job log files directly:
 
 ```bash
-nl $HOME/cylc-run/proof-of-install/run1/log/job/1/hello/01/job.out
-nl $HOME/cylc-run/proof-of-install/run1/log/job/1/world/01/job.out
+nl $HOME/cylc-run/proof-of-install/log//job/1/hello/01/job.out
+nl $HOME/cylc-run/proof-of-install/log//job/1/world/01/job.out
 ```
 
 Expected output for each task:
