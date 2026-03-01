@@ -7,10 +7,10 @@ Computes the logarithmic wind profile:
     u(z) = (u_star / kappa) * ln(z / z0)
 
 where:
-    u_star  : friction velocity (m/s)
-    z0      : aerodynamic roughness length (m)
+    u_star  : friction velocity [m/s]
+    z0      : aerodynamic roughness length [m]
     kappa   : von Karman constant (0.4)
-    z       : height above surface (m)
+    z       : height above surface [m]
 
 Reads input parameters from a forcing file and writes the wind profile to a CSV file.
 
