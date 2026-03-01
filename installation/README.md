@@ -12,6 +12,9 @@ may not be covered there.
 
 ## Conda Environment
 
+If conda is not already installed, [Miniforge](https://github.com/conda-forge/miniforge)
+is recommended — a minimal conda installer that comes preconfigured for conda-forge.
+
 The simplest way to get a reproducible Cylc installation is via conda using the provided
 environment file. This installs `cylc-flow` (the scheduler and CLI) and `cylc-uiserver`
 (the browser-based GUI) from conda-forge into an isolated environment.
