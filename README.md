@@ -1,10 +1,14 @@
 # Cylc Training Notes
 
-Personal training notes and worked examples for learning [Cylc](https://cylc.github.io/), a workflow engine for cycling systems used in operational meteorology and oceanography.
+Personal training notes and worked examples for learning [Cylc](https://cylc.github.io/),
+a workflow engine for cycling systems used in operational meteorology and oceanography.
 
 ## Scope
 
-This repository is a self-contained learning resource built around hands-on examples. It is not a replacement for the official [Cylc documentation](https://cylc.github.io/cylc-doc/stable/html/) or the [Cylc tutorial](https://cylc.github.io/cylc-doc/stable/html/tutorial/index.html), but rather a personal companion that explores Cylc features step by step with annotated examples.
+This repository is a self-contained learning resource built around hands-on examples.
+It is not a replacement for the official [Cylc documentation](https://cylc.github.io/cylc-doc/stable/html/)
+or the [Cylc tutorial](https://cylc.github.io/cylc-doc/stable/html/tutorial/index.html),
+but rather a personal companion that explores Cylc features step by step with annotated examples.
 
 Topics will include:
 
@@ -15,9 +19,20 @@ Topics will include:
 - Error handling and restart
 - Real-world patterns from operational oceanography
 
+## Contents
+
+### Getting Started
+
+- [Installation](installation/README.md) — setting up Cylc for local development, including a proof-of-install workflow
+
+### Examples
+
+*Coming soon.*
+
 ## Intended Audience
 
-Primarily written for my own learning, but structured so that it may eventually serve as introductory material for students or colleagues new to workflow management.
+Primarily written for my own learning, but structured so that it may eventually serve as
+introductory material for students or colleagues new to workflow management.
 
 ## Status
 
