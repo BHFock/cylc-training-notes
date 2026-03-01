@@ -82,7 +82,7 @@ Two Cylc environment variables are used in the task scripts:
 
 ## The `bin/` Directory
 
-The `bin/` directory contains scripts and executables that are local to the workflow.
+The [bin/](bin) directory contains scripts and executables that are local to the workflow.
 Cylc automatically makes `$CYLC_WORKFLOW_RUN_DIR/bin` available on the `PATH` for
 all tasks, so scripts placed here can be called by name without specifying their
 full path. Keeping model code in `bin/` is good practice — it separates the workflow
