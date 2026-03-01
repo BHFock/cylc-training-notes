@@ -55,11 +55,11 @@ The `=>` operator expresses a dependency: `prepare_forcing => run_model` means
 ```cylc
 [runtime]
     [[prepare_forcing]]
-        [[[environment]]]
-            z0 = 0.01
         script = """
             ...
         """
+        [[[environment]]]
+            z0 = 0.01
     [[run_model]]
         script = """
             ...
@@ -76,13 +76,19 @@ setting contains the shell commands that will be executed when the task runs.
 
 #### `[[[environment]]]`
 
-The `[[[environment]]]` subsection defines environment variables that are passed to
-the task's job script. Here `z0` — the aerodynamic roughness length — is defined at
+Each task in `[runtime]` is a self-contained definition that includes a `script` and
+optionally an `[[[environment]]]` subsection. The `script` defines what the task
+runs; `[[[environment]]]` defines the environment variables that are set before the
+script executes. Here `z0` — the aerodynamic roughness length [m] — is defined at
 the workflow level rather than hardcoded in the script:
 
 ```cylc
-[[[environment]]]
-    z0 = 0.01
+[[prepare_forcing]]
+    script = """
+        ...
+    """
+    [[[environment]]]
+        z0 = 0.01
 ```
 
 This is good practice: keeping tuneable parameters visible at the workflow level
@@ -138,7 +144,7 @@ Or observe the workflow interactively using any of the methods introduced in the
 The roughness length `z0` characterises the aerodynamic properties of a surface.
 Typical values for different surface types are:
 
-| Surface type  | z0 (m)  |
+| Surface type  | z0 [m]  |
 |---------------|---------|
 | Open sea      | 0.0002  |
 | Short grass   | 0.01    |
