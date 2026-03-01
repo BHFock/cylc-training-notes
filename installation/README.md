@@ -86,9 +86,9 @@ Expected output for each task:
 2  Job      : 1/hello/01 (try 1)
 3  User@Host: <user>@<host>
 
-4  Hello from Cylc!
-5  2026-03-01T13:36:39+01:00 INFO - started
-6  2026-03-01T13:36:40+01:00 INFO - succeeded
+ 4	Hello from Cylc!
+ 5	2026-03-01T16:39:55+01:00 INFO - started
+ 6	2026-03-01T16:40:05+01:00 INFO - succeede
 ```
 
 ```
@@ -96,15 +96,14 @@ Expected output for each task:
 2  Job      : 1/world/01 (try 1)
 3  User@Host: <user>@<host>
 
-4  Cylc proof of installation successful!
-5  2026-03-01T13:36:42+01:00 INFO - started
-6  2026-03-01T13:36:42+01:00 INFO - succeeded
+4	Cylc proof of installation successful!
+5	2026-03-01T16:40:07+01:00 INFO - started
+6	2026-03-01T16:40:17+01:00 INFO - succeeded
 ```
 
 Both tasks reporting `succeeded` confirms the installation is working correctly.
 
-To monitor running or completed workflows interactively, see the
-[next section](#monitoring-with-tui-and-gui).
+To monitor running or completed workflows interactively, see the [next section](#monitoring-with-tui-and-gui).
 
 To remove the workflow run directory once done:
 
