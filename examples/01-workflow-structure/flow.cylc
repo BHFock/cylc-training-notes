@@ -1,0 +1,63 @@
+[meta]
+    title = Log Wind Profile
+    description = """
+        A minimal three-task workflow demonstrating the basic structure of a Cylc
+        workflow file. Models the logarithmic wind profile over a surface, following
+        the pattern of a real environmental modelling workflow:
+
+            prepare_forcing => run_model => archive_output
+
+        Tasks communicate via the Cylc workflow share directory.
+    """
+
+[scheduling]
+    [[graph]]
+        R1 = prepare_forcing => run_model => archive_output
+
+[runtime]
+    [[prepare_forcing]]
+        script = """
+            echo "Preparing forcing parameters..."
+            sleep 10
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/forcing
+
+            cat > ${CYLC_WORKFLOW_SHARE_DIR}/forcing/parameters.txt << EOF
+# Log wind profile forcing parameters
+u_star = 0.4
+z0     = 0.01
+levels = 2.0, 5.0, 10.0, 20.0, 50.0, 100.0
+EOF
+
+            echo "Forcing parameters written to ${CYLC_WORKFLOW_SHARE_DIR}/forcing/parameters.txt"
+        """
+
+    [[run_model]]
+        script = """
+            echo "Running log wind profile model..."
+            sleep 15
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/output
+
+            python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/log_wind_profile.py \
+                ${CYLC_WORKFLOW_SHARE_DIR}/forcing/parameters.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/output/wind_profile.csv
+
+            echo "Model run complete."
+        """
+
+    [[archive_output]]
+        script = """
+            echo "Archiving output..."
+            sleep 10
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/archive
+
+            cp ${CYLC_WORKFLOW_SHARE_DIR}/output/wind_profile.csv \
+               ${CYLC_WORKFLOW_SHARE_DIR}/archive/wind_profile.csv
+
+            echo "--- Wind Profile Summary ---"
+            cat ${CYLC_WORKFLOW_SHARE_DIR}/archive/wind_profile.csv
+
+            echo "Archive complete."
+        """
