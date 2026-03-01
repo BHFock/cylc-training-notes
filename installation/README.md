@@ -146,10 +146,16 @@ cylc play proof-of-install
 While the tasks are running, observe the workflow state from the command line:
 
 ```bash
-cylc scan                             # list all running workflows
-cylc workflow-state proof-of-install  # overall workflow state
-cylc task-states proof-of-install     # state of each task
+cylc scan                                # list all running workflows
+cylc workflow-state proof-of-install     # overall workflow state
+cylc show proof-of-install//1/hello      # state and prerequisites of hello task
+cylc show proof-of-install//1/world      # state and prerequisites of world task
 ```
+
+The task ID format used by `cylc show` is `<workflow>//<cycle>/<task>`, where `//`
+separates the workflow name from the cycle point and `1` is the integer cycle point
+of this non-cycling workflow. This task ID format is used consistently throughout
+Cylc 8 and will appear frequently in the examples.
 
 The sleep statements in each task provide a window to see them in a `running` state
 before they complete.
