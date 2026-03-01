@@ -55,7 +55,9 @@ conda env update -f installation/environment.yml --prune
 
 ## Proof of Installation
 
-The `proof-of-install/` directory contains a minimal two-task [workflow](proof-of-install/flow.cylc) that verifies Cylc is correctly installed and functioning. The tasks do nothing more than print a message — the point is simply to confirm that the scheduler can run a workflow to completion.
+The `proof-of-install/` directory contains a minimal two-task workflow that verifies
+Cylc is correctly installed and functioning. The tasks do nothing more than print a
+message — the point is simply to confirm that the scheduler can run a workflow to completion.
 
 Ensure the `cylc-training` conda environment is active:
 
@@ -66,7 +68,8 @@ conda activate cylc-training
 Install and run the workflow:
 
 ```bash
-cylc install proof-of-install --no-run-name
+cd installation/proof-of-install
+cylc install . --no-run-name
 cylc play proof-of-install
 ```
 
@@ -93,7 +96,9 @@ cylc clean proof-of-install
 
 ## Troubleshooting
 
-<!-- Issues encountered and how they were resolved. -->
+**`WorkflowFilesError: Could not find workflow`** — `cylc install` searches `~/cylc-src`
+by default, not the current directory. Always `cd` into the workflow directory and use
+`cylc install .` rather than referring to the workflow by name from elsewhere.
 
 ## References
 
