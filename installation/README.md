@@ -12,11 +12,35 @@ may not be covered there.
 
 ## Conda Environment
 
-<!-- Document the conda/mamba environment setup, e.g.:
-- environment name
-- any specific package pinning required
-- the environment.yml if useful
--->
+The simplest way to get a reproducible Cylc installation is via conda using the provided
+environment file. This installs `cylc-flow` (the scheduler and CLI) and `cylc-uiserver`
+(the browser-based GUI) from conda-forge into an isolated environment.
+
+Create and activate the environment:
+
+```bash
+conda env create -f installation/environment.yml
+conda activate cylc-training
+```
+
+Verify the installation:
+
+```bash
+cylc version
+```
+
+To update the environment later if `environment.yml` changes:
+
+```bash
+conda env update -f installation/environment.yml --prune
+```
+
+> **Note:** The `--prune` flag removes any packages no longer listed in the environment
+> file, keeping the environment clean and consistent.
+
+> **Note on job environments:** The `cylc-training` environment is for running the Cylc
+> scheduler only. Environments for the workflows themselves (e.g. with GRIB or NetCDF
+> support) are kept separate and documented within the relevant examples.
 
 ## Post-Install Configuration
 
@@ -48,4 +72,5 @@ Expected output:
 ## References
 
 - [Cylc installation docs](https://cylc.github.io/cylc-doc/stable/html/installation.html)
+- [Cylc conda environments reference](https://cylc.github.io/cylc-doc/stable/html/reference/environments/conda.html)
 - [Cylc GitHub](https://github.com/cylc/cylc-flow)
