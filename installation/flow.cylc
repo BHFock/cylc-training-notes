@@ -1,0 +1,16 @@
+[meta]
+    title = Proof of Installation
+    description = """
+        A minimal workflow to verify that Cylc is correctly installed and functioning.
+        Two tasks run in sequence; successful completion confirms the installation is working.
+    """
+
+[scheduling]
+    [[graph]]
+        R1 = hello => world
+
+[runtime]
+    [[hello]]
+        script = echo "Hello from Cylc!"
+    [[world]]
+        script = echo "Cylc proof of installation successful!"
