@@ -12,7 +12,7 @@ prepare_forcing => run_model => archive_output
 
 ## The `flow.cylc` File
 
-Every Cylc workflow is defined by a `flow.cylc` file. It is divided into sections,
+Every Cylc workflow is defined by a [flow.cylc](flow.cylc) file. It is divided into sections,
 each enclosed in square brackets. The three sections introduced here are `[meta]`,
 `[scheduling]`, and `[runtime]`.
 
