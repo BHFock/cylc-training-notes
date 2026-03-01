@@ -170,20 +170,18 @@ through `waiting`, `running`, and `succeeded` states.
 
 ### Observed Run with the GUI
 
-The browser-based GUI provides a richer graphical view but depends on `cylc-uiserver`
-running correctly:
+Having explored the CLI and TUI, the browser-based GUI provides a richer graphical view of the same information. With the workflow running:
 
 ```bash
-cylc install .
-cylc play proof-of-install
 cylc gui
 ```
+
+Note that the GUI depends on `cylc-uiserver` being correctly installed and may require some additional configuration — see [Troubleshooting](#troubleshooting) if it fails to open.
 
 ## Troubleshooting
 
 **`WorkflowFilesError: Could not find workflow`** — `cylc install` searches `~/cylc-src`
-by default, not the current directory. Always `cd` into the workflow directory and use
-`cylc install .` rather than referring to the workflow by name from elsewhere.
+by default, not the current directory. Always `cd` into the workflow directory and use `cylc install .` rather than referring to the workflow by name from elsewhere.
 
 ## References
 
