@@ -55,6 +55,8 @@ The `=>` operator expresses a dependency: `prepare_forcing => run_model` means
 ```cylc
 [runtime]
     [[prepare_forcing]]
+        [[[environment]]]
+            z0 = 0.01
         script = """
             ...
         """
@@ -72,7 +74,22 @@ The `[runtime]` section defines what each task actually does. Each task is defin
 as a subsection with a name matching one of the tasks in the graph. The `script`
 setting contains the shell commands that will be executed when the task runs.
 
-Two Cylc environment variables are used in the task scripts:
+#### `[[[environment]]]`
+
+The `[[[environment]]]` subsection defines environment variables that are passed to
+the task's job script. Here `z0` — the aerodynamic roughness length — is defined at
+the workflow level rather than hardcoded in the script:
+
+```cylc
+[[[environment]]]
+    z0 = 0.01
+```
+
+This is good practice: keeping tuneable parameters visible at the workflow level
+makes the workflow self-documenting and easy to modify between runs. The variable
+is then available in the script as `${z0}`.
+
+Two Cylc environment variables are also used in the task scripts:
 
 - `$CYLC_WORKFLOW_SHARE_DIR` — a shared directory available to all tasks in the
   workflow, used here to pass files between tasks. This is the standard Cylc pattern
@@ -101,7 +118,7 @@ Verify the output by inspecting the wind profile CSV in the share directory:
 cat ~/cylc-run/ctn01_workflow-structure/run1/share/output/wind_profile.csv
 ```
 
-Expected output:
+Expected output for the default `z0 = 0.01` m (short grass):
 
 ```
 height_m,wind_speed_ms
@@ -116,8 +133,62 @@ height_m,wind_speed_ms
 Or observe the workflow interactively using any of the methods introduced in the
 [installation section](../../installation/README.md#monitoring-with-tui-and-gui).
 
+## Parameter Study: Roughness Length
+
+The roughness length `z0` characterises the aerodynamic properties of a surface.
+Typical values for different surface types are:
+
+| Surface type  | z0 (m)  |
+|---------------|---------|
+| Open sea      | 0.0002  |
+| Short grass   | 0.01    |
+| Farmland      | 0.1     |
+
+Each time `cylc vip .` is run, Cylc installs the workflow into a new numbered run
+directory — `run1`, `run2`, `run3` — leaving the previous results intact. This makes
+it straightforward to compare results across runs.
+
+To run the parameter study, edit `z0` in `flow.cylc` and run `cylc vip .` for each
+surface type:
+
+```bash
+# run1 — short grass (default, already run)
+
+# Edit flow.cylc: z0 = 0.0002
+cylc vip .   # creates run2
+
+# Edit flow.cylc: z0 = 0.1
+cylc vip .   # creates run3
+```
+
+Compare the results across runs:
+
+```bash
+echo "=== run1: short grass (z0=0.01) ===" && \
+    cat ~/cylc-run/ctn01_workflow-structure/run1/share/output/wind_profile.csv
+echo "=== run2: open sea (z0=0.0002) ===" && \
+    cat ~/cylc-run/ctn01_workflow-structure/run2/share/output/wind_profile.csv
+echo "=== run3: farmland (z0=0.1) ===" && \
+    cat ~/cylc-run/ctn01_workflow-structure/run3/share/output/wind_profile.csv
+```
+
+The run directories are managed by Cylc under `~/cylc-run/ctn01_workflow-structure/`
+and can be listed at any time:
+
+```bash
+ls ~/cylc-run/ctn01_workflow-structure/
+```
+
 ## Cleaning Up
+
+To remove all runs:
 
 ```bash
 cylc clean ctn01_workflow-structure
+```
+
+To remove a specific run only:
+
+```bash
+cylc clean ctn01_workflow-structure/run2
 ```
