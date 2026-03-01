@@ -1,0 +1,7 @@
+name: cylc-training
+channels:
+  - conda-forge
+dependencies:
+  - cylc-flow =8.5
+  - cylc-uiserver
+  
