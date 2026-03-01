@@ -170,18 +170,43 @@ through `waiting`, `running`, and `succeeded` states.
 
 ### Observed Run with the GUI
 
-Having explored the CLI and TUI, the browser-based GUI provides a richer graphical view of the same information. With the workflow running:
+### Observed Run with the GUI
+
+Having explored the CLI and TUI, the browser-based GUI provides a richer graphical view.
+Start the GUI server in the background to keep the terminal free:
 
 ```bash
-cylc gui
+cylc gui --no-browser &
 ```
 
-Note that the GUI depends on `cylc-uiserver` being correctly installed and may require some additional configuration — see [Troubleshooting](#troubleshooting) if it fails to open.
+The terminal will print a URL — copy and paste it into your browser:
+
+```
+http://localhost:8888/lab?token=...
+```
+
+Then start a new run to observe in the GUI:
+
+```bash
+cylc clean proof-of-install
+cylc install .
+cylc play proof-of-install
+```
+
+The GUI will show the workflow and tasks moving through their states in real time.
+
+> **Note:** The `--no-browser` flag is required as modern browsers block direct access
+> to local files, which is how `cylc gui` attempts to open the browser by default.
 
 ## Troubleshooting
 
 **`WorkflowFilesError: Could not find workflow`** — `cylc install` searches `~/cylc-src`
-by default, not the current directory. Always `cd` into the workflow directory and use `cylc install .` rather than referring to the workflow by name from elsewhere.
+by default, not the current directory. Always `cd` into the workflow directory and use
+`cylc install .` rather than referring to the workflow by name from elsewhere.
+
+**`Access to the file was denied` when opening the GUI** — modern browsers block direct
+access to local files, which is how `cylc gui` attempts to open the browser. Use
+`cylc gui --no-browser &` instead and copy the URL from the terminal output into the browser.
 
 ## References
 
