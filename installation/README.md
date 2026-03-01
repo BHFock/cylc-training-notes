@@ -55,7 +55,10 @@ conda env update -f installation/environment.yml --prune
 
 ## Proof of Installation
 
-The `proof-of-install/` directory contains a minimal two-task [workflow](proof-of-install/flow.cylc) that verifies Cylc is correctly installed and functioning. The tasks do nothing more than print a message — the point is simply to confirm that the scheduler can run a workflow to completion.
+The `proof-of-install/` directory contains a minimal two-task [workflow](proof-of-install/flow.cylc)
+that verifies Cylc is correctly installed and functioning. The tasks do nothing more than
+print a message — the point is simply to confirm that the scheduler can run a workflow to
+completion.
 
 Ensure the `cylc-training` conda environment is active:
 
@@ -75,8 +78,8 @@ Once the workflow has had a moment to complete, verify the results by inspecting
 job log files directly:
 
 ```bash
-nl $HOME/cylc-run/proof-of-install/log//job/1/hello/01/job.out
-nl $HOME/cylc-run/proof-of-install/log//job/1/world/01/job.out
+nl $HOME/cylc-run/proof-of-install/log/job/1/hello/01/job.out
+nl $HOME/cylc-run/proof-of-install/log/job/1/world/01/job.out
 ```
 
 Expected output for each task:
@@ -86,9 +89,9 @@ Expected output for each task:
 2  Job      : 1/hello/01 (try 1)
 3  User@Host: <user>@<host>
 
- 4	Hello from Cylc!
- 5	2026-03-01T16:39:55+01:00 INFO - started
- 6	2026-03-01T16:40:05+01:00 INFO - succeede
+4  Hello from Cylc!
+5  2026-03-01T16:39:55+01:00 INFO - started
+6  2026-03-01T16:40:05+01:00 INFO - succeeded
 ```
 
 ```
@@ -96,14 +99,15 @@ Expected output for each task:
 2  Job      : 1/world/01 (try 1)
 3  User@Host: <user>@<host>
 
-4	Cylc proof of installation successful!
-5	2026-03-01T16:40:07+01:00 INFO - started
-6	2026-03-01T16:40:17+01:00 INFO - succeeded
+4  Cylc proof of installation successful!
+5  2026-03-01T16:40:07+01:00 INFO - started
+6  2026-03-01T16:40:17+01:00 INFO - succeeded
 ```
 
 Both tasks reporting `succeeded` confirms the installation is working correctly.
 
-To monitor running or completed workflows interactively, see the [next section](#monitoring-with-tui-and-gui).
+To monitor running or completed workflows interactively, see the
+[next section](#monitoring-with-tui-and-gui).
 
 To remove the workflow run directory once done:
 
@@ -113,14 +117,32 @@ cylc clean proof-of-install
 
 ## Monitoring with TUI and GUI
 
-For interactive monitoring, Cylc provides two options. The terminal UI (TUI) requires no
-additional setup and is the most reliable option for a local installation:
+As a next step, try running the workflow interactively from the TUI. First clean the
+previous run:
+
+```bash
+cylc clean proof-of-install
+```
+
+Install the workflow without running it:
+
+```bash
+cd installation/proof-of-install
+cylc install . --no-run-name
+```
+
+Open the TUI:
 
 ```bash
 cylc tui proof-of-install
 ```
 
-The browser-based GUI provides a richer view but depends on `cylc-uiserver` running correctly:
+From the TUI, select the workflow and trigger it to play. The sleep statements in each
+task give enough time to observe the tasks moving through `waiting`, `running`, and
+`succeeded` states.
+
+The browser-based GUI provides a richer graphical view but depends on `cylc-uiserver`
+running correctly:
 
 ```bash
 cylc gui
