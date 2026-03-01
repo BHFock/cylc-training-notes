@@ -65,33 +65,68 @@ Ensure the `cylc-training` conda environment is active:
 conda activate cylc-training
 ```
 
-Install and run the workflow:
+Run the workflow using `cylc vip` (validate, install, play) which combines all steps
+into a single command:
 
 ```bash
 cd installation/proof-of-install
-cylc install . --no-run-name
-cylc play proof-of-install
+cylc vip . --no-run-name
 ```
 
-Monitor progress on the command line:
+Once the workflow has had a moment to complete, verify the results by inspecting the
+job log files directly:
 
 ```bash
-cylc tui proof-of-install
+nl $HOME/cylc-run/proof-of-install/run1/log/job/1/hello/01/job.out
+nl $HOME/cylc-run/proof-of-install/run1/log/job/1/world/01/job.out
 ```
 
-Or open the browser GUI:
+Expected output for each task:
 
-```bash
-cylc gui
+```
+1  Workflow : proof-of-install/run1
+2  Job      : 1/hello/01 (try 1)
+3  User@Host: <user>@<host>
+
+4  Hello from Cylc!
+5  2026-03-01T13:36:39+01:00 INFO - started
+6  2026-03-01T13:36:40+01:00 INFO - succeeded
 ```
 
-Both tasks (`hello` and `world`) should complete with status **succeeded**, after which
-the workflow stops automatically.
+```
+1  Workflow : proof-of-install/run1
+2  Job      : 1/world/01 (try 1)
+3  User@Host: <user>@<host>
+
+4  Cylc proof of installation successful!
+5  2026-03-01T13:36:42+01:00 INFO - started
+6  2026-03-01T13:36:42+01:00 INFO - succeeded
+```
+
+Both tasks reporting `succeeded` confirms the installation is working correctly.
+
+To monitor running or completed workflows interactively, see the
+[next section](#monitoring-with-tui-and-gui).
 
 To remove the workflow run directory once done:
 
 ```bash
 cylc clean proof-of-install
+```
+
+## Monitoring with TUI and GUI
+
+For interactive monitoring, Cylc provides two options. The terminal UI (TUI) requires no
+additional setup and is the most reliable option for a local installation:
+
+```bash
+cylc tui proof-of-install
+```
+
+The browser-based GUI provides a richer view but depends on `cylc-uiserver` running correctly:
+
+```bash
+cylc gui
 ```
 
 ## Troubleshooting
