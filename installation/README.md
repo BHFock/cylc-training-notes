@@ -55,17 +55,42 @@ conda env update -f installation/environment.yml --prune
 
 ## Proof of Installation
 
-Once installed, run the [proof-of-install workflow](./proof-of-install/) to confirm everything
-is working correctly:
+The `proof-of-install/` directory contains a minimal two-task workflow that verifies
+Cylc is correctly installed and functioning. The tasks do nothing more than print a
+message — the point is simply to confirm that the scheduler can run a workflow to completion.
+
+Ensure the `cylc-training` conda environment is active:
 
 ```bash
-# commands to run the proof-of-install workflow go here
+conda activate cylc-training
 ```
 
-Expected output:
+Install and run the workflow:
 
+```bash
+cylc install proof-of-install --no-run-name
+cylc play proof-of-install
 ```
-# paste expected terminal output here
+
+Monitor progress on the command line:
+
+```bash
+cylc tui proof-of-install
+```
+
+Or open the browser GUI:
+
+```bash
+cylc gui
+```
+
+Both tasks (`hello` and `world`) should complete with status **succeeded**, after which
+the workflow stops automatically.
+
+To remove the workflow run directory once done:
+
+```bash
+cylc clean proof-of-install
 ```
 
 ## Troubleshooting
