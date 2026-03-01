@@ -27,7 +27,7 @@ Topics will include:
 
 ### Examples
 
-*Coming soon.*
+- [01: Workflow Structure](examples/ctn01_workflow-structure/README.md) — the `flow.cylc` file, task dependencies, and the `bin/` directory, illustrated with a log wind profile model
 
 ## Intended Audience
 
