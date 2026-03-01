@@ -57,8 +57,8 @@ conda env update -f installation/environment.yml --prune
 
 The `proof-of-install/` directory contains a minimal two-task [workflow](proof-of-install/flow.cylc)
 that verifies Cylc is correctly installed and functioning. The tasks do nothing more than
-print a message — the point is simply to confirm that the scheduler can run a workflow to
-completion.
+print a message and sleep briefly — the sleep gives enough time to observe the workflow
+in a running state.
 
 Ensure the `cylc-training` conda environment is active:
 
@@ -66,16 +66,17 @@ Ensure the `cylc-training` conda environment is active:
 conda activate cylc-training
 ```
 
-Run the workflow using `cylc vip` (validate, install, play) which combines all steps
-into a single command:
+### Quick Run with `cylc vip`
+
+The quickest way to verify the installation is with `cylc vip` (validate, install, play),
+which combines all three steps into a single command:
 
 ```bash
 cd installation/proof-of-install
 cylc vip .
 ```
 
-Once the workflow has had a moment to complete, verify the results by inspecting the
-job log files directly:
+Once the workflow has completed, verify the results by inspecting the job log files directly:
 
 ```bash
 nl $HOME/cylc-run/proof-of-install/run1/log/job/1/hello/01/job.out
@@ -106,45 +107,74 @@ Expected output for each task:
 
 Both tasks reporting `succeeded` confirms the installation is working correctly.
 
-To monitor running or completed workflows interactively, see the
-[next section](#monitoring-with-tui-and-gui).
-
 To remove the workflow run directory once done:
 
 ```bash
 cylc clean proof-of-install
 ```
 
-## Monitoring with TUI and GUI
+### Observed Run with `cylc validate`, `cylc install`, `cylc play`
 
-As a next step, try running the workflow interactively from the TUI. First clean the
-previous run:
+Under the hood, `cylc vip` is shorthand for three separate steps. Running them explicitly
+allows the workflow state to be observed at each stage from the command line — a useful
+habit that maps directly to how Cylc is used in operational settings.
+
+First clean the previous run:
 
 ```bash
 cylc clean proof-of-install
 ```
 
-Install the workflow without running it:
+Validate the workflow definition (still in `installation/proof-of-install/`):
 
 ```bash
-cd installation/proof-of-install
+cylc validate .
+```
+
+Install the workflow into `~/cylc-run/`:
+
+```bash
 cylc install .
 ```
 
-Open the TUI:
+Start the scheduler:
 
 ```bash
+cylc play proof-of-install
+```
+
+While the tasks are running, observe the workflow state from the command line:
+
+```bash
+cylc scan                             # list all running workflows
+cylc workflow-state proof-of-install  # overall workflow state
+cylc task-states proof-of-install     # state of each task
+```
+
+The sleep statements in each task provide a window to see them in a `running` state
+before they complete.
+
+### Observed Run with the TUI
+
+As an alternative to the CLI commands above, open the TUI before playing the workflow
+and observe the task states interactively:
+
+```bash
+cylc install .
 cylc tui proof-of-install
 ```
 
-From the TUI, select the workflow and trigger it to play. The sleep statements in each
-task give enough time to observe the tasks moving through `waiting`, `running`, and
-`succeeded` states.
+From the TUI, select the workflow and trigger it to play. The tasks can be seen moving
+through `waiting`, `running`, and `succeeded` states.
+
+### Observed Run with the GUI
 
 The browser-based GUI provides a richer graphical view but depends on `cylc-uiserver`
 running correctly:
 
 ```bash
+cylc install .
+cylc play proof-of-install
 cylc gui
 ```
 
