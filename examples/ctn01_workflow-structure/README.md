@@ -91,14 +91,14 @@ logic (`flow.cylc`) from the scientific code.
 ## Running the Example
 
 ```bash
-cd examples/01-workflow-structure
+cd examples/ctn01_workflow-structure
 cylc vip .
 ```
 
 Verify the output by inspecting the wind profile CSV in the share directory:
 
 ```bash
-cat ~/cylc-run/01-workflow-structure/run1/share/output/wind_profile.csv
+cat ~/cylc-run/ctn01_workflow-structure/run1/share/output/wind_profile.csv
 ```
 
 Expected output:
@@ -119,5 +119,5 @@ Or observe the workflow interactively using any of the methods introduced in the
 ## Cleaning Up
 
 ```bash
-cylc clean 01-workflow-structure
+cylc clean ctn01_workflow-structure
 ```
