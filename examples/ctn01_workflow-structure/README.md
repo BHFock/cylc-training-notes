@@ -105,12 +105,12 @@ Expected output:
 
 ```
 height_m,wind_speed_ms
-2.0,3.5707
-5.0,4.7965
-10.0,5.7682
-20.0,6.7399
-50.0,7.9657
-100.0,8.9374
+2.0,5.2983
+5.0,6.2146
+10.0,6.9078
+20.0,7.6009
+50.0,8.5172
+100.0,9.2103
 ```
 
 Or observe the workflow interactively using any of the methods introduced in the
