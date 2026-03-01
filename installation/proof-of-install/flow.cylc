@@ -11,6 +11,12 @@
 
 [runtime]
     [[hello]]
-        script = echo "Hello from Cylc!"
+        script = """
+            echo "Hello from Cylc!"
+            sleep 10
+        """
     [[world]]
-        script = echo "Cylc proof of installation successful!"
+        script = """
+            echo "Cylc proof of installation successful!"
+            sleep 10
+        """
