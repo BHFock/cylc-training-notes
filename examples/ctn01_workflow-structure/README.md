@@ -172,6 +172,38 @@ echo "=== run3: farmland (z0=0.1) ===" && \
     cat ~/cylc-run/ctn01_workflow-structure/run3/share/output/wind_profile.csv
 ```
 
+Expected output:
+
+```
+=== run1: short grass (z0=0.01) ===
+height_m,wind_speed_ms
+2.0,5.2983
+5.0,6.2146
+10.0,6.9078
+20.0,7.6009
+50.0,8.5172
+100.0,9.2103
+=== run2: open sea (z0=0.0002) ===
+height_m,wind_speed_ms
+2.0,9.2103
+5.0,10.1266
+10.0,10.8198
+20.0,11.5129
+50.0,12.4292
+100.0,13.1224
+=== run3: farmland (z0=0.1) ===
+height_m,wind_speed_ms
+2.0,2.9957
+5.0,3.912
+10.0,4.6052
+20.0,5.2983
+50.0,6.2146
+100.0,6.9078
+```
+
+As expected, smoother surfaces (smaller z0) produce higher wind speeds at all heights,
+while rougher surfaces (larger z0) reduce wind speeds through increased surface drag.
+
 The run directories are managed by Cylc under `~/cylc-run/ctn01_workflow-structure/`
 and can be listed at any time:
 
