@@ -1,0 +1,62 @@
+[meta]
+    title = Offshore Wind Extrapolation — Datetime Cycling
+    description = """
+        A datetime-cycling workflow that extrapolates 10 m wind speed to 100 m
+        using the logarithmic wind profile, cycling at the standard synoptic hours
+        00, 06, 12, and 18 UTC.
+
+        Demonstrates datetime cycling, cold start initialisation, and cycle-stamped
+        output files.
+
+            install_cold => generate_forcing => extrapolate_wind
+    """
+
+[scheduling]
+    initial cycle point = 20000101T00Z
+    final cycle point   = 20000101T18Z
+    [[graph]]
+        R1/20000101T00Z      = install_cold
+        T00,T06,T12,T18      = install_cold[^] => generate_forcing => extrapolate_wind
+
+[runtime]
+    [[install_cold]]
+        script = """
+            echo "Installing ancillary files..."
+            sleep 5
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/ancil
+
+            cp ${CYLC_WORKFLOW_RUN_DIR}/ancil/roughness_length.txt \
+               ${CYLC_WORKFLOW_SHARE_DIR}/ancil/roughness_length.txt
+
+            echo "Roughness length ancillary installed."
+        """
+
+    [[generate_forcing]]
+        script = """
+            echo "Generating wind forcing for cycle ${CYLC_TASK_CYCLE_POINT}..."
+            sleep 10
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/forcing
+
+            python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/generate_forcing.py \
+                ${CYLC_TASK_CYCLE_POINT} \
+                ${CYLC_WORKFLOW_SHARE_DIR}/forcing/u10_${CYLC_TASK_CYCLE_POINT}.txt
+
+            echo "Forcing complete."
+        """
+
+    [[extrapolate_wind]]
+        script = """
+            echo "Extrapolating wind for cycle ${CYLC_TASK_CYCLE_POINT}..."
+            sleep 10
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/output
+
+            python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/extrapolate_wind.py \
+                ${CYLC_WORKFLOW_SHARE_DIR}/forcing/u10_${CYLC_TASK_CYCLE_POINT}.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/ancil/roughness_length.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/output/wind_${CYLC_TASK_CYCLE_POINT}.txt
+
+            echo "Extrapolation complete."
+        """
