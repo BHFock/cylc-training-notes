@@ -2,7 +2,7 @@
     title = Offshore Wind Extrapolation — Inter-cycle Dependencies
     description = """
         Extends ctn02 to introduce inter-cycle dependencies. Each cycle uses the
-        previous cycle's 100 [m] wind as a restart field, making the cycling
+        previous cycle's 100m wind as a restart field, making the cycling
         sequential rather than parallel.
 
         The first cycle performs a cold start. Subsequent cycles perform a warm
