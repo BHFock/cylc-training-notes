@@ -3,7 +3,7 @@
 # Example 02: Datetime Cycling
 
 This example introduces datetime cycling — the core scheduling mechanism for operational
-environmental modelling. The workflow extrapolates 10m wind speed to 100m using
+environmental modelling. The workflow extrapolates 10m wind speed to 100 m using
 the logarithmic wind profile, cycling at the standard synoptic hours 00, 06, 12, and 18 UTC:
 
 ```
