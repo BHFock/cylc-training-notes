@@ -1,0 +1,82 @@
+[meta]
+    title = Offshore Wind Extrapolation — Inter-cycle Dependencies
+    description = """
+        Extends ctn02 to introduce inter-cycle dependencies. Each cycle uses the
+        previous cycle's 100 [m] wind as a restart field, making the cycling
+        sequential rather than parallel.
+
+        The first cycle performs a cold start. Subsequent cycles perform a warm
+        start, perturbing the first-guess derived from the previous cycle's output.
+
+            install_cold => generate_forcing => extrapolate_wind
+                           ^--- restart from previous cycle
+    """
+
+[scheduling]
+    initial cycle point = 20000101T00Z
+    final cycle point   = 20000101T18Z
+    [[graph]]
+        R1    = install_cold
+        PT6H  = install_cold[^] => generate_forcing => extrapolate_wind
+        PT6H  = extrapolate_wind[-PT6H] => generate_forcing
+
+[runtime]
+    [[install_cold]]
+        script = """
+            echo "Installing ancillary files..."
+            sleep 5
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/ancil
+
+            cp ${CYLC_WORKFLOW_RUN_DIR}/ancil/roughness_length.txt \
+               ${CYLC_WORKFLOW_SHARE_DIR}/ancil/roughness_length.txt
+
+            echo "Roughness length ancillary installed."
+        """
+
+    [[generate_forcing]]
+        script = """
+            echo "Generating wind forcing for cycle ${CYLC_TASK_CYCLE_POINT}..."
+            sleep 10
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/forcing
+
+            RESTART=${CYLC_WORKFLOW_SHARE_DIR}/restart/wind_${CYLC_TASK_CYCLE_POINT_PREV}.txt
+
+            if [ -f "${RESTART}" ]; then
+                echo "Warm start: using restart from ${CYLC_TASK_CYCLE_POINT_PREV}"
+                python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/generate_forcing.py \
+                    ${CYLC_TASK_CYCLE_POINT} \
+                    ${z0} \
+                    ${CYLC_WORKFLOW_SHARE_DIR}/forcing/u10_${CYLC_TASK_CYCLE_POINT}.txt \
+                    ${RESTART}
+            else
+                echo "Cold start: no restart available"
+                python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/generate_forcing.py \
+                    ${CYLC_TASK_CYCLE_POINT} \
+                    ${z0} \
+                    ${CYLC_WORKFLOW_SHARE_DIR}/forcing/u10_${CYLC_TASK_CYCLE_POINT}.txt
+            fi
+        """
+        [[[environment]]]
+            z0 = 0.0002
+            CYLC_TASK_CYCLE_POINT_PREV = $(cylc cyclepoint --offset=-PT6H --print-point)
+
+    [[extrapolate_wind]]
+        script = """
+            echo "Extrapolating wind for cycle ${CYLC_TASK_CYCLE_POINT}..."
+            sleep 10
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/output
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/restart
+
+            python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/extrapolate_wind.py \
+                ${CYLC_WORKFLOW_SHARE_DIR}/forcing/u10_${CYLC_TASK_CYCLE_POINT}.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/ancil/roughness_length.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/output/wind_${CYLC_TASK_CYCLE_POINT}.txt
+
+            cp ${CYLC_WORKFLOW_SHARE_DIR}/output/wind_${CYLC_TASK_CYCLE_POINT}.txt \
+               ${CYLC_WORKFLOW_SHARE_DIR}/restart/wind_${CYLC_TASK_CYCLE_POINT}.txt
+
+            echo "Extrapolation complete."
+        """
