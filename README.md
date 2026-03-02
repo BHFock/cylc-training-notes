@@ -28,6 +28,7 @@ Topics will include:
 ### Examples
 
 - [01: Workflow Structure](examples/ctn01_workflow-structure/README.md) — the `flow.cylc` file, task dependencies, and the `bin/` directory, illustrated with a log wind profile model
+- [02: Datetime Cycling](examples/ctn02_datetime-cycling/README.md) — datetime cycling, cold start initialisation, synoptic hour anchoring, and cycle-stamped output files, illustrated with a wind speed extrapolation model
 
 ## Intended Audience
 
