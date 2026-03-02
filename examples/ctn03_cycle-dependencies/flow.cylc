@@ -60,7 +60,7 @@
         """
         [[[environment]]]
             z0 = 0.0002
-            CYLC_TASK_CYCLE_POINT_PREV = $(cylc cyclepoint --offset=-PT6H --print-point)
+            CYLC_TASK_CYCLE_POINT_PREV = $(cylc cycle-point --offset-hours=-6)
 
     [[extrapolate_wind]]
         script = """
