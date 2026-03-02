@@ -29,6 +29,7 @@ Topics will include:
 
 - [01: Workflow Structure](examples/ctn01_workflow-structure/README.md) — the `flow.cylc` file, task dependencies, and the `bin/` directory, illustrated with a log wind profile model
 - [02: Datetime Cycling](examples/ctn02_datetime-cycling/README.md) — datetime cycling, cold start initialisation, synoptic hour anchoring, and cycle-stamped output files, illustrated with a wind speed extrapolation model
+- [03: Cycle Dependencies](examples/ctn03_cycle-dependencies/README.md) — inter-cycle dependencies, sequential cycling, warm start restarts, and the Cylc workflow directory structure, illustrated with a DA-like NWP cycling system
 
 ## Intended Audience
 
