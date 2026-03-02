@@ -15,8 +15,8 @@
     initial cycle point = 20000101T00Z
     final cycle point   = 20000101T18Z
     [[graph]]
-        R1/20000101T00Z      = install_cold
-        T00,T06,T12,T18      = install_cold[^] => generate_forcing => extrapolate_wind
+        R1              = install_cold
+        T00,T06,T12,T18 = install_cold[^] => generate_forcing => extrapolate_wind
 
 [runtime]
     [[install_cold]]
