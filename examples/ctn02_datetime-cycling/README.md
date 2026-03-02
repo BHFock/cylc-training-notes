@@ -2,7 +2,8 @@
 
 # Example 02: Datetime Cycling
 
-This example introduces datetime cycling — the core scheduling mechanism for operational environmental modelling. The workflow extrapolates 10m wind speed to 100m using
+This example introduces datetime cycling — the core scheduling mechanism for operational
+environmental modelling. The workflow extrapolates 10m wind speed to 100m using
 the logarithmic wind profile, cycling at the standard synoptic hours 00, 06, 12, and 18 UTC:
 
 ```
@@ -11,6 +12,17 @@ install_cold => generate_forcing => extrapolate_wind
 
 `install_cold` runs once at the start of the workflow. `generate_forcing` and
 `extrapolate_wind` repeat at each synoptic cycle.
+
+## The Science
+
+The wind speed extrapolation follows the logarithmic wind profile:
+
+    u(100) = u(10) * ln(100 / z0) / ln(10 / z0)
+
+where `u(10)` is the 10 [m] wind speed [m/s], `u(100)` is the extrapolated 100 [m]
+wind speed [m/s], and `z0` is the aerodynamic roughness length [m]. See
+[bin/extrapolate_wind.py](bin/extrapolate_wind.py) for the implementation and
+[bin/generate_forcing.py](bin/generate_forcing.py) for the stochastic forcing generator.
 
 ## The `flow.cylc` File
 
@@ -75,7 +87,7 @@ it straightforward to identify which output belongs to which cycle.
 
 The [ancil/](ancil) directory contains static ancillary files that are installed once
 by `install_cold` into the workflow share directory. Here it holds the roughness length
-for an offshore wind application. Separating ancillary data from the `bin/` scripts
+for an offshore wind application. Separating ancillary data from the [bin/](bin) scripts
 and `flow.cylc` is good practice — it mirrors the structure of real operational systems
 where surface parameters are maintained as versioned datasets.
 
@@ -84,7 +96,8 @@ where surface parameters are maintained as versioned datasets.
 In this workflow all four synoptic cycles run in parallel — each cycle only depends on
 `install_cold` completing, not on the previous cycle. This is intentional here and
 reflects workflows where each cycle is fully independent, such as ensemble members or
-hindcast studies.
+hindcast studies. It also allows Cylc to utilise multiple processors simultaneously,
+making efficient use of available hardware.
 
 In operational forecasting systems, cycles typically depend on the previous cycle
 — for example to provide a model restart or a first-guess field. Inter-cycle
@@ -113,13 +126,21 @@ Extend the cycling to cover a full week by changing `final cycle point`:
 final cycle point = 20000107T18Z
 ```
 
-Then try changing the cycling from synoptic hours to every 3 hours:
+Then try changing the cycling from synoptic hours to every 3 hours. The explicit
+form lists each hour:
 
 ```cylc
 T00,T03,T06,T09,T12,T15,T18,T21
 ```
 
-Observe how Cylc manages the increased number of cycles in the TUI or GUI.
+This can also be written more concisely using the interval shorthand:
+
+```cylc
+T00/PT3H
+```
+
+Both are equivalent — `T00/PT3H` means "starting at T00, repeat every 3 hours".
+This shorthand becomes particularly useful when the cycling frequency increases.
 
 ## Cleaning Up
 
