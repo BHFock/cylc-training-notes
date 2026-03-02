@@ -1,0 +1,3 @@
+# Roughness length ancillary - offshore wind application
+# Reference: Charnock (1955), typical open sea value
+z0 = 0.0002
