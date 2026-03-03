@@ -2,15 +2,12 @@
 
 # Example 03: Cycle Dependencies and Workflow Directory Structure
 
-This example extends the datetime cycling introduced in `ctn02` by adding
-inter-cycle dependencies — each cycle uses the previous cycle's 100m wind
-as a restart field, making the cycling sequential. This mirrors the structure
-of a real data assimilation or NWP system where each forecast cycle depends
-on the previous cycle's output as a first-guess field.
+This example extends the datetime cycling introduced in [ctn02](../ctn02_datetime-cycling/README.md) by adding inter-cycle dependencies — each cycle uses the previous cycle's 100m wind as a restart field, making the cycling sequential. This mirrors the structure of a real data assimilation or NWP system where each forecast cycle depends on the previous cycle's output as a first-guess field.
 
-The science is unchanged — see [bin/extrapolate_wind.py](bin/extrapolate_wind.py)
-for the log law extrapolation and [bin/generate_forcing.py](bin/generate_forcing.py)
-for the stochastic forcing with warm start perturbation.
+The workflow is defined in [flow.cylc](flow.cylc). The science is unchanged — see
+[bin/extrapolate_wind.py](bin/extrapolate_wind.py) for the log law extrapolation
+and [bin/generate_forcing.py](bin/generate_forcing.py) for the stochastic forcing
+with warm start perturbation.
 
 ## Inter-cycle Dependencies
 
