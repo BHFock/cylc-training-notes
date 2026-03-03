@@ -22,8 +22,9 @@
     final cycle point   = 20000101T18Z
     [[graph]]
         R1   = install_cold
-        PT6H = install_cold[^] => generate_forcing => generate_ensemble_forcing<member>
-        PT6H = generate_ensemble_forcing<member> => extrapolate_wind<member> => ensemble_mean
+        PT6H = install_cold[^] => generate_forcing \
+                               => generate_ensemble_forcing<member> \
+                               => extrapolate_wind<member> => ensemble_mean
         PT6H = ensemble_mean[-PT6H] => generate_forcing
 
 [runtime]
