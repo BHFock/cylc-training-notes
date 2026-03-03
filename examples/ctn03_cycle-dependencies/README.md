@@ -2,12 +2,32 @@
 
 # Example 03: Cycle Dependencies and Workflow Directory Structure
 
-This example extends the datetime cycling introduced in [ctn02](../ctn02_datetime-cycling/README.md) by adding inter-cycle dependencies — each cycle uses the previous cycle's 100m wind as a restart field, making the cycling sequential. This mirrors the structure of a real data assimilation or NWP system where each forecast cycle depends on the previous cycle's output as a first-guess field.
+This example extends the datetime cycling introduced in [ctn02](../ctn02_datetime-cycling/README.md)
+by adding inter-cycle dependencies. It models a simplified 6-hourly analysis cycle for
+offshore wind, where each cycle:
 
-The workflow is defined in [flow.cylc](flow.cylc). The science is unchanged — see
-[bin/extrapolate_wind.py](bin/extrapolate_wind.py) for the log law extrapolation
-and [bin/generate_forcing.py](bin/generate_forcing.py) for the stochastic forcing
-with warm start perturbation.
+1. Generates a 10 m wind analysis `u(10)` using the previous cycle's 100 m wind
+   `u_prev(100)` as a first-guess, scaled back to 10 m by the inverse log law and perturbed
+   by a small random analysis increment `ε`:
+
+        u_fg(10) = u_prev(100) * ln(10/z0) / ln(100/z0)
+        u(10)    = u_fg(10) * (1 + ε),   ε ~ U(-0.10, +0.10)
+
+2. Extrapolates the new analysis to 100 m for the next cycle:
+
+        u(100) = u(10) * ln(100/z0) / ln(10/z0)
+
+The dependence of each cycle on the previous cycle's `u_prev(100)` is what makes the cycling
+sequential — each cycle cannot start until the previous one has completed. This is the
+fundamental structure of any cycling NWP or ocean forecast system.
+
+The first cycle has no previous cycle and performs a cold start, drawing `u(10)`
+randomly from the full offshore wind speed range.
+
+The workflow is defined in [flow.cylc](flow.cylc). See
+[bin/extrapolate_wind.py](bin/extrapolate_wind.py) for the log law extrapolation and
+[bin/generate_forcing.py](bin/generate_forcing.py) for the stochastic forcing with
+warm start perturbation.
 
 ## Inter-cycle Dependencies
 
