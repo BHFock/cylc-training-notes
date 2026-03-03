@@ -1,0 +1,117 @@
+[meta]
+    title = Offshore Wind Ensemble Forecast — Parametrised Tasks
+    description = """
+        Extends ctn03 to run an ensemble of 5 forecast members in parallel at each
+        cycle. Each member receives an independent perturbation of the deterministic
+        10 [m] wind analysis. The ensemble mean and spread are computed after all
+        members complete, and the mean is passed as the restart field to the next cycle.
+
+            install_cold
+            => generate_forcing
+            => generate_ensemble_forcing<member>  [fan-out: 5 parallel members]
+            => extrapolate_wind<member>
+            => ensemble_mean                       [fan-in: waits for all members]
+            => generate_forcing (next cycle)
+    """
+
+[task parameters]
+    member = 1..5
+
+[scheduling]
+    initial cycle point = 20000101T00Z
+    final cycle point   = 20000101T18Z
+    [[graph]]
+        R1   = install_cold
+        PT6H = install_cold[^] => generate_forcing => generate_ensemble_forcing<member>
+        PT6H = generate_ensemble_forcing<member> => extrapolate_wind<member> => ensemble_mean
+        PT6H = ensemble_mean[-PT6H] => generate_forcing
+
+[runtime]
+    [[install_cold]]
+        script = """
+            echo "Installing ancillary files..."
+            sleep 5
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/ancil
+
+            cp ${CYLC_WORKFLOW_RUN_DIR}/ancil/roughness_length.txt \
+               ${CYLC_WORKFLOW_SHARE_DIR}/ancil/roughness_length.txt
+
+            echo "Roughness length ancillary installed."
+        """
+
+    [[generate_forcing]]
+        script = """
+            echo "Generating deterministic forcing for cycle ${CYLC_TASK_CYCLE_POINT}..."
+            sleep 5
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/forcing
+
+            RESTART=${CYLC_WORKFLOW_SHARE_DIR}/restart/wind_${CYLC_TASK_CYCLE_POINT_PREV}.txt
+
+            if [ -f "${RESTART}" ]; then
+                echo "Warm start: using restart from ${CYLC_TASK_CYCLE_POINT_PREV}"
+                python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/generate_forcing.py \
+                    ${CYLC_TASK_CYCLE_POINT} \
+                    ${z0} \
+                    ${CYLC_WORKFLOW_SHARE_DIR}/forcing/u10_${CYLC_TASK_CYCLE_POINT}.txt \
+                    ${RESTART}
+            else
+                echo "Cold start: no restart available"
+                python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/generate_forcing.py \
+                    ${CYLC_TASK_CYCLE_POINT} \
+                    ${z0} \
+                    ${CYLC_WORKFLOW_SHARE_DIR}/forcing/u10_${CYLC_TASK_CYCLE_POINT}.txt
+            fi
+        """
+        [[[environment]]]
+            z0 = 0.0002
+            CYLC_TASK_CYCLE_POINT_PREV = $(cylc cycle-point --offset-hours=-6)
+
+    [[generate_ensemble_forcing<member>]]
+        script = """
+            echo "Generating ensemble forcing for cycle ${CYLC_TASK_CYCLE_POINT} member ${MEMBER_ID}..."
+            sleep 5
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/forcing
+
+            python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/generate_ensemble_forcing.py \
+                ${CYLC_TASK_CYCLE_POINT} \
+                ${MEMBER_ID} \
+                ${CYLC_WORKFLOW_SHARE_DIR}/forcing/u10_${CYLC_TASK_CYCLE_POINT}.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/forcing/u10_${CYLC_TASK_CYCLE_POINT}_m${MEMBER_ID}.txt
+        """
+        [[[environment]]]
+            MEMBER_ID = %(member)s
+
+    [[extrapolate_wind<member>]]
+        script = """
+            echo "Extrapolating wind for cycle ${CYLC_TASK_CYCLE_POINT} member ${MEMBER_ID}..."
+            sleep 10
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/output
+
+            python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/extrapolate_wind.py \
+                ${CYLC_WORKFLOW_SHARE_DIR}/forcing/u10_${CYLC_TASK_CYCLE_POINT}_m${MEMBER_ID}.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/ancil/roughness_length.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/output/wind_${CYLC_TASK_CYCLE_POINT}_m${MEMBER_ID}.txt
+        """
+        [[[environment]]]
+            MEMBER_ID = %(member)s
+
+    [[ensemble_mean]]
+        script = """
+            echo "Computing ensemble mean for cycle ${CYLC_TASK_CYCLE_POINT}..."
+            sleep 5
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/ensemble
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/restart
+
+            python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/ensemble_mean.py \
+                ${CYLC_TASK_CYCLE_POINT} \
+                ${CYLC_WORKFLOW_SHARE_DIR}/ensemble/mean_${CYLC_TASK_CYCLE_POINT}.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/restart/wind_${CYLC_TASK_CYCLE_POINT}.txt \
+                $(ls ${CYLC_WORKFLOW_SHARE_DIR}/output/wind_${CYLC_TASK_CYCLE_POINT}_m*.txt | sort)
+
+            echo "Ensemble mean complete."
+        """
