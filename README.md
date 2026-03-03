@@ -10,15 +10,6 @@ It is not a replacement for the official [Cylc documentation](https://cylc.githu
 or the [Cylc tutorial](https://cylc.github.io/cylc-doc/stable/html/tutorial/index.html),
 but rather a personal companion that explores Cylc features step by step with annotated examples.
 
-Topics will include:
-
-- Cylc basics: workflows, tasks, dependencies
-- Scheduling and cycling
-- Runtime configuration
-- Job submission and platforms
-- Error handling and restart
-- Real-world patterns from operational oceanography
-
 ## Contents
 
 ### Getting Started
