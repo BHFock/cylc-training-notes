@@ -10,7 +10,7 @@
             => generate_forcing
             => generate_ensemble_forcing<member>  [fan-out: 5 parallel members]
             => extrapolate_wind<member>
-            => ensemble_mean                       [fan-in: waits for all members]
+            => ensemble_mean                      [fan-in: waits for all members]
             => generate_forcing (next cycle)
     """
 
