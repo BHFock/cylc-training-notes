@@ -80,9 +80,8 @@ remain in a waiting state even if all its task dependencies are satisfied.
 ### `initial cycle point = now`
 
 Setting `initial cycle point = now` starts the workflow at the current
-wall-clock time, rounded down to the nearest whole minute. This means the
-first cycle triggers almost immediately rather than waiting for a fixed
-historical date.
+wall-clock time, rounded down to the nearest whole minute, so the first
+cycle triggers almost immediately.
 
 ```cylc
 initial cycle point = now
