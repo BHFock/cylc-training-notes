@@ -1,0 +1,8 @@
+# Vestas V236-15.0 MW offshore wind turbine
+# Source: Vestas technical specifications
+turbine    = V236-15.0
+hub_height = 119.0
+u_cutin    = 3.0
+u_rated    = 13.0
+u_cutout   = 31.0
+P_rated    = 15.0

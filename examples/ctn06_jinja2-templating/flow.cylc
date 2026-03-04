@@ -1,0 +1,100 @@
+#!jinja2
+
+{# ------------------------------------------------------------------ #}
+{# Wind park configuration                                             #}
+{#                                                                     #}
+{# To add or remove a wind park, edit this list. The graph and        #}
+{# runtime sections are generated automatically by the for loop.      #}
+{# ------------------------------------------------------------------ #}
+
+{% set wind_parks = [
+    {'name': 'alpha', 'turbine': 'V90',  'site': 'offshore'},
+    {'name': 'beta',  'turbine': 'V150', 'site': 'offshore'},
+    {'name': 'gamma', 'turbine': 'V236', 'site': 'onshore'},
+] %}
+
+[meta]
+    title = Multi-Park Wind Monitoring — Jinja2 Templating
+    description = """
+        A real-time wind monitoring and energy yield estimation workflow for
+        three offshore and onshore wind parks. Each park has its own met mast
+        observation, hub-height extrapolation, and power curve estimation,
+        running in parallel within each 1-minute cycle.
+
+        The workflow is configured via a Jinja2 template at the top of this
+        file. Adding a new wind park requires only a new entry in the
+        wind_parks list.
+    """
+
+[scheduling]
+    initial cycle point = now
+    final cycle point   = +PT10M
+    [[xtriggers]]
+        clock = wall_clock()
+    [[graph]]
+        R1   = install_cold
+        PT1M = """
+        {% for park in wind_parks %}
+            @clock & install_cold[^] \
+                => generate_forcing_{{ park.name }} \
+                => extrapolate_wind_{{ park.name }} \
+                => estimate_yield_{{ park.name }}
+        {% endfor %}
+        """
+
+[runtime]
+    [[install_cold]]
+        script = """
+            echo "Installing turbine ancillary files..."
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/ancil
+
+            {% for park in wind_parks %}
+                cp ${CYLC_WORKFLOW_RUN_DIR}/ancil/{{ park.turbine | lower }}.txt \
+                   ${CYLC_WORKFLOW_SHARE_DIR}/ancil/{{ park.name }}.txt
+                echo "  {{ park.name }}: {{ park.turbine }} ({{ park.site }})"
+            {% endfor %}
+
+            echo "Done."
+        """
+
+{% for park in wind_parks %}
+
+    [[generate_forcing_{{ park.name }}]]
+        script = """
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/forcing/{{ park.name }}
+
+            python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/generate_forcing.py \
+                ${CYLC_TASK_CYCLE_POINT} \
+                ${CYLC_WORKFLOW_SHARE_DIR}/forcing/{{ park.name }}/u10_${CYLC_TASK_CYCLE_POINT}.txt
+        """
+
+    [[extrapolate_wind_{{ park.name }}]]
+        script = """
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/wind/{{ park.name }}
+
+            python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/extrapolate_wind.py \
+                ${CYLC_WORKFLOW_SHARE_DIR}/forcing/{{ park.name }}/u10_${CYLC_TASK_CYCLE_POINT}.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/ancil/{{ park.name }}.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/wind/{{ park.name }}/u_hub_${CYLC_TASK_CYCLE_POINT}.txt
+        """
+        [[[environment]]]
+            {% if park.site == 'offshore' %}
+                z0 = 0.0002
+            {% else %}
+                z0 = 0.03
+            {% endif %}
+
+
+    [[estimate_yield_{{ park.name }}]]
+        script = """
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/yield/{{ park.name }}
+
+            python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/estimate_yield.py \
+                ${CYLC_WORKFLOW_SHARE_DIR}/wind/{{ park.name }}/u_hub_${CYLC_TASK_CYCLE_POINT}.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/ancil/{{ park.name }}.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/yield/{{ park.name }}/power_${CYLC_TASK_CYCLE_POINT}.txt
+        """
+
+{% endfor %}
+
