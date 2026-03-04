@@ -169,6 +169,11 @@ PERTURB_MAX = 0.30   # wide perturbations
 
 Compare the `u100_spread` values in the ensemble output between the two runs.
 
+## Further Reading
+
+- [Task Parameters](https://cylc.github.io/cylc-doc/stable/html/user-guide/writing-workflows/parameterized-tasks.html) — full reference for `[task parameters]`, parameter templates, and the `<param>` notation in graphs and runtime
+- [Parameters Tutorial](https://cylc.github.io/cylc-doc/stable/html/tutorial/runtime/configuration-consolidation/parameters.html) — hands-on introduction to parametrised tasks using a weather station example
+
 ## Cleaning Up
 
 ```bash
