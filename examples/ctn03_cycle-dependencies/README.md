@@ -163,6 +163,12 @@ final cycle point = 20000102T18Z
 Observe how the restart chain extends across the day boundary, with `20000102T00Z`
 depending on `20000101T18Z`.
 
+## Further Reading
+
+- [Installing Workflows](https://cylc.github.io/cylc-doc/stable/html/user-guide/installing-workflows.html) — how `cylc install` creates the run directory structure, numbered runs, and the `runN` symlink
+- [Job Script Variables](https://cylc.github.io/cylc-doc/stable/html/reference/job-script-vars/index.html) — complete reference for all environment variables available to task scripts, including `$CYLC_WORKFLOW_SHARE_DIR`, `$CYLC_TASK_WORK_DIR`, and `$CYLC_TASK_LOG_DIR`
+- [Scheduling Configuration](https://cylc.github.io/cylc-doc/stable/html/user-guide/writing-workflows/scheduling.html) — inter-cycle dependency syntax and recurrence expressions including `[-PT6H]` offsets
+
 ## Cleaning Up
 
 ```bash
