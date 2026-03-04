@@ -217,6 +217,13 @@ and can be listed at any time:
 ls ~/cylc-run/ctn01_workflow-structure/
 ```
 
+## Further Reading
+
+- [Workflow Configuration](https://cylc.github.io/cylc-doc/stable/html/user-guide/writing-workflows/configuration.html) — `flow.cylc` file structure and all valid configuration items
+- [Scheduling Configuration](https://cylc.github.io/cylc-doc/stable/html/user-guide/writing-workflows/scheduling.html) — graph syntax, recurrence expressions, and task dependencies
+- [Runtime Configuration](https://cylc.github.io/cylc-doc/stable/html/user-guide/writing-workflows/runtime.html) — task scripts, environment variables, and job submission
+
+
 ## Cleaning Up
 
 To remove all runs:
