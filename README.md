@@ -22,6 +22,7 @@ but rather a personal companion that explores Cylc features step by step with an
 - [02: Datetime Cycling](examples/ctn02_datetime-cycling/README.md) — datetime cycling, cold start initialisation, synoptic hour anchoring, and cycle-stamped output files, illustrated with a wind speed extrapolation model
 - [03: Cycle Dependencies](examples/ctn03_cycle-dependencies/README.md) — inter-cycle dependencies, sequential cycling, warm start restarts, and the Cylc workflow directory structure, illustrated with a DA-like NWP cycling system
 - [04: Parametrised Ensembles](examples/ctn04_parametrised-ensembles/README.md) — parametrised tasks, fan-out / fan-in patterns, and parameter templates for ensemble IO, illustrated with a 5-member offshore wind ensemble forecast
+- [05: Clock Triggers](examples/ctn05_clock-triggers/README.md) — clock triggers, real-time cycling, and combining xtriggers with task dependencies, illustrated with a real-time wind monitoring and energy yield estimation system
 
 ## Intended Audience
 
