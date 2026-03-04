@@ -1,0 +1,74 @@
+[meta]
+    title = Offshore Wind Monitoring — Clock Triggers
+    description = """
+        A real-time wind monitoring and energy yield estimation workflow for an
+        offshore wind farm. Each cycle ingests a simulated 10 m wind observation
+        from a met mast, extrapolates to turbine hub height, and estimates
+        instantaneous power output for a Vestas V90-3.0 MW turbine.
+
+        Cycles are gated by a clock trigger — each 1-minute cycle will not start
+        until the wall-clock time reaches the cycle point, making this a genuine
+        real-time processing workflow.
+
+            install_cold => generate_forcing => extrapolate_wind => estimate_yield
+    """
+
+[scheduling]
+    initial cycle point = now
+    final cycle point   = +PT10M
+    [[xtriggers]]
+        clock = wall_clock()
+    [[graph]]
+        R1   = install_cold
+        PT1M = @clock & install_cold[^] \
+               => generate_forcing      \
+               => extrapolate_wind      \
+               => estimate_yield
+
+[runtime]
+    [[install_cold]]
+        script = """
+            echo "Installing ancillary files..."
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/ancil
+
+            cp ${CYLC_WORKFLOW_RUN_DIR}/ancil/v90.txt \
+               ${CYLC_WORKFLOW_SHARE_DIR}/ancil/v90.txt
+
+            echo "Turbine ancillary installed."
+        """
+
+    [[generate_forcing]]
+        script = """
+            echo "Generating wind observation for cycle ${CYLC_TASK_CYCLE_POINT}..."
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/forcing
+
+            python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/generate_forcing.py \
+                ${CYLC_TASK_CYCLE_POINT} \
+                ${CYLC_WORKFLOW_SHARE_DIR}/forcing/u10_${CYLC_TASK_CYCLE_POINT}.txt
+        """
+
+    [[extrapolate_wind]]
+        script = """
+            echo "Extrapolating wind to hub height for cycle ${CYLC_TASK_CYCLE_POINT}..."
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/wind
+
+            python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/extrapolate_wind.py \
+                ${CYLC_WORKFLOW_SHARE_DIR}/forcing/u10_${CYLC_TASK_CYCLE_POINT}.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/ancil/v90.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/wind/u_hub_${CYLC_TASK_CYCLE_POINT}.txt
+        """
+
+    [[estimate_yield]]
+        script = """
+            echo "Estimating energy yield for cycle ${CYLC_TASK_CYCLE_POINT}..."
+
+            mkdir -p ${CYLC_WORKFLOW_SHARE_DIR}/yield
+
+            python3 ${CYLC_WORKFLOW_RUN_DIR}/bin/estimate_yield.py \
+                ${CYLC_WORKFLOW_SHARE_DIR}/wind/u_hub_${CYLC_TASK_CYCLE_POINT}.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/ancil/v90.txt \
+                ${CYLC_WORKFLOW_SHARE_DIR}/yield/power_${CYLC_TASK_CYCLE_POINT}.txt
+        """
