@@ -142,6 +142,12 @@ T00/PT3H
 Both are equivalent — `T00/PT3H` means "starting at T00, repeat every 3 hours".
 This shorthand becomes particularly useful when the cycling frequency increases.
 
+## Further Reading
+
+- [Datetime Cycling Tutorial](https://cylc.github.io/cylc-doc/stable/html/tutorial/scheduling/datetime-cycling.html) — hands-on introduction to ISO 8601 cycle points and recurrence expressions
+- [Scheduling Configuration](https://cylc.github.io/cylc-doc/stable/html/user-guide/writing-workflows/scheduling.html) — full reference for recurrence syntax, `initial cycle point`, `final cycle point`, and inter-cycle dependencies
+- [Job Script Variables](https://cylc.github.io/cylc-doc/stable/html/reference/job-script-vars/index.html) — complete list of environment variables available to task scripts, including `$CYLC_TASK_CYCLE_POINT`
+
 ## Cleaning Up
 
 ```bash
