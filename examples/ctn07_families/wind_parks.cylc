@@ -1,0 +1,13 @@
+{# ------------------------------------------------------------------ #}
+{# Wind park configuration                                             #}
+{#                                                                     #}
+{# To add or remove a wind park, edit this list. The graph and        #}
+{# runtime sections are generated automatically by the for loop.      #}
+{# ------------------------------------------------------------------ #}
+
+{% set wind_parks = [
+    {'name': 'alpha',   'turbine': 'V90',  'manufacturer': 'vestas'},
+    {'name': 'beta',    'turbine': 'V150', 'manufacturer': 'vestas'},
+    {'name': 'delta',   'turbine': 'SG5',  'manufacturer': 'siemens'},
+    {'name': 'epsilon', 'turbine': 'SG6',  'manufacturer': 'siemens'},
+] %}

@@ -1,0 +1,8 @@
+# Siemens Gamesa SG 6.0-170 offshore wind turbine
+# Source: Siemens Gamesa technical specifications
+turbine    = SG6.0-170
+hub_height = 115.0
+u_cutin    = 3.0
+u_rated    = 13.0
+u_cutout   = 25.0
+P_rated    = 6.0

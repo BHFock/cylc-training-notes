@@ -1,0 +1,8 @@
+# Siemens Gamesa SG 5.0-145 offshore wind turbine
+# Source: Siemens Gamesa technical specifications
+turbine    = SG5.0-145
+hub_height = 100.0
+u_cutin    = 3.0
+u_rated    = 13.0
+u_cutout   = 25.0
+P_rated    = 5.0
