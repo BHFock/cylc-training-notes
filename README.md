@@ -24,6 +24,7 @@ but rather a personal companion that explores Cylc features step by step with an
 - [04: Parametrised Ensembles](examples/ctn04_parametrised-ensembles/README.md) — parametrised tasks, fan-out / fan-in patterns, and parameter templates for ensemble IO, illustrated with a 5-member offshore wind ensemble forecast
 - [05: Clock Triggers](examples/ctn05_clock-triggers/README.md) — clock triggers, real-time cycling, and combining xtriggers with task dependencies, illustrated with a real-time wind monitoring and energy yield estimation system
 - [06: Jinja2 Templating](examples/ctn06_jinja2-templating/README.md) — Jinja2 variables, loops, and conditionals in `flow.cylc`, illustrated with a multi-park wind monitoring system processing three wind parks in parallel
+- [07: Families and Include Files](examples/ctn07_families/README.md) — task families, runtime inheritance, and include files for configuration separation, illustrated with a four-park wind monitoring system serving two turbine manufacturers
 
 ## Intended Audience
 
