@@ -72,7 +72,7 @@ in a running state.
 Ensure the `cylc-training` conda environment is active:
 
 ```bash
-conda activate cylc-training
+conda activate cylc-8.6.5
 ```
 
 ### Quick Run with `cylc vip`
