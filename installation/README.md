@@ -41,7 +41,7 @@ conda env update -f installation/environment.yml --prune
 > **Note:** The `--prune` flag removes any packages no longer listed in the environment
 > file, keeping the environment clean and consistent.
 
-> **Note on job environments:** The `cylc-training` environment is for running the Cylc
+> **Note on job environments:** The `cylc-8.6.5` environment is for running the Cylc
 > scheduler only. Environments for the workflows themselves (e.g. with GRIB or NetCDF
 > support) are kept separate and documented within the relevant examples.
 
@@ -69,7 +69,7 @@ that verifies Cylc is correctly installed and functioning. The tasks do nothing 
 print a message and sleep briefly — the sleep gives enough time to observe the workflow
 in a running state.
 
-Ensure the `cylc-training` conda environment is active:
+Ensure the `cylc-8.6.5` conda environment is active:
 
 ```bash
 conda activate cylc-8.6.5
