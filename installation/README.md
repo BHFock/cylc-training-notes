@@ -47,10 +47,19 @@ conda env update -f installation/environment.yml --prune
 
 ## Post-Install Configuration
 
-<!-- Any configuration steps beyond the basic installation, e.g.:
+### The Version Wrapper
+
+Cylc cannot activate its own environment, and `conda activate` is not available inside
+task job scripts. The recommended solution is a wrapper script named `cylc` on `$PATH`
+that selects the environment and re-invokes the real command inside it.
+
+See [The Cylc Version Wrapper](version-wrapper.md) for the full setup — extracting the
+wrapper with `cylc get-resources`, the `cylc-<version>` naming convention, version
+selection via `CYLC_VERSION`, and what changes on multi-host systems.
+
+<!-- Still to cover:
 - Global config file locations (~/.cylc/)
 - Platform definitions
-- Any environment variables worth setting
 -->
 
 ## Proof of Installation
