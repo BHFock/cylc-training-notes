@@ -69,7 +69,8 @@ that verifies Cylc is correctly installed and functioning. The tasks do nothing 
 print a message and sleep briefly — the sleep gives enough time to observe the workflow
 in a running state.
 
-Ensure the `cylc-8.6.5` conda environment is active:
+If you have set up the [version wrapper](version-wrapper.md), `cylc` is already
+available and no activation is needed. Otherwise, activate the environment first:
 
 ```bash
 conda activate cylc-8.6.5
