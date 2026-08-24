@@ -180,8 +180,6 @@ through `waiting`, `running`, and `succeeded` states.
 
 ### Observed Run with the GUI
 
-### Observed Run with the GUI
-
 Having explored the CLI and TUI, the browser-based GUI provides a richer graphical view.
 Start the GUI server in the background to keep the terminal free:
 
