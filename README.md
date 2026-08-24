@@ -15,6 +15,7 @@ but rather a personal companion that explores Cylc features step by step with an
 ### Getting Started
 
 - [Installation](installation/README.md) — setting up Cylc for local development, including a proof-of-install workflow
+- [Version Wrapper](installation/version-wrapper.md) — running Cylc without activating the conda environment, and managing multiple versions
 
 ### Examples
 
