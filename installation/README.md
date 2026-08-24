@@ -23,7 +23,7 @@ Create and activate the environment:
 
 ```bash
 conda env create -f installation/environment.yml
-conda activate cylc-training
+conda activate cylc-8.6.5
 ```
 
 Verify the installation:
